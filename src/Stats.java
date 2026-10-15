@@ -1,11 +1,16 @@
 /**
- * Basic statistics over a sample of measurements
+ * Utility class providing basic statistical functions over a sample of measurements.
+ * @author <a href="mailto:everton.cavalcante@ufrn.br">Everton Cavalcante</a>
  */
 public final class Stats {
+    /**
+     * Private constructor to prevent instantiation of utility class.
+     */
     private Stats() {}
 
     /**
-     * Calculates the arithmetic mean of a set of values
+     * Calculates the arithmetic mean of a set of values.
+     *
      * @param values Values to calculate the mean of
      * @return Arithmetic mean of {@code values}
      */
@@ -18,10 +23,12 @@ public final class Stats {
     }
 
     /**
-     * Calculates the sample standard deviation of a set of values
+     * Calculates the sample standard deviation of a set of values.
+     *
      * @param values Values to calculate the standard deviation of
-     * @param mean Mean of {@code values}
-     * @return Sample standard deviation of {@code values} around {@code mean} */
+     * @param mean   Mean of {@code values}
+     * @return Sample standard deviation of {@code values} around {@code mean}
+     */
     public static double stdDev(double[] values, double mean) {
         double sumSquaredDiffs = 0;
         for (double v : values) {

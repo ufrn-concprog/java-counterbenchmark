@@ -9,22 +9,45 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Unlike other locking mechanisms (e.g., synchronized blocks), spin locks avoid
  * context switches by keeping threads in an active waiting state.
  * However, this can lead to high CPU utilization in contention-heavy environments.
+ *
+ * @author <a href="mailto:everton.cavalcante@ufrn.br">Everton Cavalcante</a>
  */
 public class SpinLockCounter implements Counter {
+    /**
+     * State of the spin lock: {@code true} if locked, {@code false} if unlocked.
+     */
     private final AtomicBoolean locked = new AtomicBoolean(false);
 
-    private long value; // guarded by the spin lock
+    /**
+     * The current value of the counter, guarded by the spin lock.
+     */
+    private long value;
 
+    /**
+     * Constructs a new {@code SpinLockCounter} with an initial value of zero.
+     */
+    public SpinLockCounter() {
+    }
+
+    /**
+     * Acquires the spin lock, busy-waiting until it becomes available.
+     */
     private void lock() {
         while (!locked.compareAndSet(false, true)) {
             Thread.onSpinWait();    // busy-waiting: blocks the thread until the lock is released
         }
     }
 
+    /**
+     * Releases the spin lock.
+     */
     private void unlock() {
         locked.set(false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void increment() {
         lock();
@@ -35,6 +58,9 @@ public class SpinLockCounter implements Counter {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long get() {
         lock();

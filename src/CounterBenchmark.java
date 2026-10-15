@@ -3,12 +3,17 @@ import java.util.concurrent.CyclicBarrier;
 
 /**
  * Benchmarks the {@link Counter} implementations.
+ * @author <a href="mailto:everton.cavalcante@ufrn.br">Everton Cavalcante</a>
  */
 public final class CounterBenchmark {
+    /**
+     * Private constructor to prevent instantiation of utility class.
+     */
     private CounterBenchmark() {}
 
     /**
      * Outcome of one trial.
+     *
      * @param seconds Elapsed time, from the moment all threads were released until all had finished
      * @param correct Whether the final count equals the number of increments performed
      */
