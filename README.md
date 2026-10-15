@@ -11,12 +11,12 @@ This project is part of the **Concurrent Programming** module at the [Federal Un
  
 ### Mechanisms
  
-| Mechanism | Class | How it works | Correct? |
-|:----------|:------|:-------------|:---------|
-| Unsynchronized | [`UnsafeCounter`](src/UnsafeCounter.java) | Increment to a vollatile variable | No: it loses updates |
-| Synchronized methods | [`SynchronizedCounter`](src/SynchronizedCounter.java) | Increment and get methods synchronized (mutual exclusion) | Yes |
-| Atomic | [`AtomicCounter`](src/AtomicCounter.java) | [`AtomicLong.incrementAndGet()`](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/concurrent/atomic/AtomicLong.html), a hardware atomic read-modify-write | Yes |
-| Spin lock | [`SpinLockCounter`](src/SpinLockCounter.java) | A compare-and-swap loop on an `AtomicBoolean`, with `Thread.onSpinWait()` | Yes |
+| Mechanism            | Class                                                 | How it works                                                                                                                                                                     | Correct?             |
+|:---------------------|:------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------|
+| Unsynchronized       | [`UnsafeCounter`](src/UnsafeCounter.java)             | Increment to a volatile variable                                                                                                                                                 | No: it loses updates |
+| Synchronized methods | [`SynchronizedCounter`](src/SynchronizedCounter.java) | Increment and get methods synchronized (mutual exclusion)                                                                                                                        | Yes                  |
+| Atomic               | [`AtomicCounter`](src/AtomicCounter.java)             | [`AtomicLong.incrementAndGet()`](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/concurrent/atomic/AtomicLong.html), a hardware atomic read-modify-write  | Yes                  |
+| Spin lock            | [`SpinLockCounter`](src/SpinLockCounter.java)         | A compare-and-swap loop on an `AtomicBoolean`, with `Thread.onSpinWait()`                                                                                                        | Yes                  |
  
 All four implement the [`Counter`](src/Counter.java) interface, so the benchmark treats them uniformly.
  
@@ -24,9 +24,9 @@ All four implement the [`Counter`](src/Counter.java) interface, so the benchmark
  
 1. **Fixed total work.** Every configuration performs 5,000,000 increments in total, divided evenly among 1, 2, 4, 8, and 16 threads. The 1-thread case refers to each mechanism's *uncontended* cost, and the other rows show what contention adds.
 2. **Starting gate.** The worker threads and the main thread wait at a [`CyclicBarrier`](https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/concurrent/CyclicBarrier.html), so all workers begin incrementing together. Timing starts when the gate opens and ends when all workers have finished. Thread creation is not timed.
-4. **Warm-up.** For each configuration, 5 trials run and are discarded.
-5. **Measurement.** 20 measured trials per configuration, reporting the mean and standard deviation.
-6. **Correctness check.** After each trial, the final count is compared with the number of increments performed, and the number of correct trials is reported.
+3. **Warm-up.** For each configuration, 5 trials run and are discarded.
+4. **Measurement.** 20 measured trials per configuration, reporting the mean and standard deviation.
+5. **Correctness check.** After each trial, the final count is compared with the number of increments performed, and the number of correct trials is reported.
 
 ### Design Notes
  
@@ -39,7 +39,7 @@ All four implement the [`Counter`](src/Counter.java) interface, so the benchmark
  
 ```
 counter-benchmark/
-└── doc/                        # Javadoc HTML documentation
+└── doc/                          # Javadoc HTML documentation
 └── README.md
 └── src/
     ├── Counter.java              # Interface implemented by all four mechanisms
@@ -66,10 +66,10 @@ The program uses only the Java standard library, so there are no additional depe
 Run each mechanism at once:
  
 ```bash
-for m in unsynchronized mutex atomic spinlock; do java -cp out Main $m; done
+for m in unsynchronized synchronized atomic spinlock; do java -cp out Main $m; done
 ```
  
-Or run a single mechanism. For example.
+Or run a single mechanism. For example:
  
 ```bash
 java -cp out Main atomic
@@ -79,12 +79,12 @@ With no argument, all four mechanisms run in the same JVM. This is convenient fo
  
 The workload is configured by constants at the top of [`Main`](src/Main.java): 
 
-| Constant            | Description | Value set |
-| :-----------------  | :---------- | --------- |
-| `TOTAL_INCREMENTS`  | Total increments per trial, divided among the threads (all thread counts divide it evenly) | 5,000,000 |
-| `THREAD_COUNTS`     | Number of threads to use for each benchmark run | 1, 2, 4, 8, 16 |
-| `MEASURED_RUNS`     | Number of runs to measure for each configuration | 20 |
-| `WARMUP_RUNS`       | Discarded runs before measuring each configuration to let the JVM warm up | 5 |
+| Constant           | Description                                                                                | Value set      |
+|:-------------------|:-------------------------------------------------------------------------------------------|:---------------|
+| `TOTAL_INCREMENTS` | Total increments per trial, divided among the threads (all thread counts divide it evenly) | 5,000,000      |
+| `THREAD_COUNTS`    | Number of threads to use for each benchmark run                                            | 1, 2, 4, 8, 16 |
+| `MEASURED_RUNS`    | Number of runs to measure for each configuration                                           | 20             |
+| `WARMUP_RUNS`      | Discarded runs before measuring each configuration to let the JVM warm up                  | 5              |
  
 ### Output Example
  
@@ -101,7 +101,7 @@ The `Correct` column shows how many of the 20 measured trials ended with the rig
  
 These are hypotheses to check, not guaranteed results:
  
-* **Unsynchronized:** correct with 1 thread and wrong with 2 or more threads; it is the fastest strategy due to zero synchronization overhead.
+* **Unsynchronized:** correct with one thread and wrong with two or more threads; it is the fastest strategy due to zero synchronization overhead.
 * **Synchronized method:** always correct; under contention, threads block and wake up.
 * **Atomic:** always correct; it delivers near-optimal performance at low thread counts using hardware-level compare-and-swap, but suffers moderate performance loss under high contention due to repeated retry loops.
 * **Spin lock:** it may be competitive with fewer threads, but causes severe performance degradation as thread count scales because threads consume CPU cycles while busy-waiting for the lock.
