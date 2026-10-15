@@ -37,19 +37,20 @@ All four implement the [`Counter`](src/Counter.java) interface, so the benchmark
 
 ## 📂 Repository Structure
  
-```
+```text
 java-counterbenchmark/
 └── doc/                          # Javadoc HTML documentation
+└── LICENSE
 └── README.md
 └── src/
-    ├── Counter.java              # Interface implemented by all four mechanisms
-    ├── UnsafeCounter.java        # Volatile counter, no mutual exclusion (loses updates)
-    ├── SynchronizedCounter.java  # Synchronized methods
     ├── AtomicCounter.java        # AtomicLong
-    ├── SpinLockCounter.java      # Spin lock built on AtomicBoolean compare-and-swap
-    ├── CounterBenchmark.java     # One trial: threads, starting gate, timing, correctness
-    ├── Stats.java                # Mean and sample standard deviation
+    ├── Counter.java              # Interface implemented by all four mechanisms
+    ├── CounterBenchmark.java     # One trial: threads, starting gate, timing, correct
     ├── Main.java                 # Benchmark's entry point
+    ├── SpinLockCounter.java      # Spin lock built on AtomicBoolean compare-and-swap
+    ├── Stats.java                # Mean and sample standard deviation
+    ├── SynchronizedCounter.java  # Synchronized methods
+    └── UnsafeCounter.java        # Volatile counter, no mutual exclusion (loses updates)
 ```
  
 ## 🚀 Getting Started
