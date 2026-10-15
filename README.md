@@ -38,7 +38,7 @@ All four implement the [`Counter`](src/Counter.java) interface, so the benchmark
 ## 📂 Repository Structure
  
 ```
-counter-benchmark/
+java-counterbenchmark/
 └── doc/                          # Javadoc HTML documentation
 └── README.md
 └── src/
